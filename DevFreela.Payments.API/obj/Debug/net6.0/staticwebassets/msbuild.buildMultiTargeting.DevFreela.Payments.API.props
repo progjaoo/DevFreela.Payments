@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\DevFreela.Payments.API.props" />
+</Project>
