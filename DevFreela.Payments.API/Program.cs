@@ -1,5 +1,6 @@
 using DevFreela.Payments.API.Consumers;
 using DevFreela.Payments.API.Services;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
