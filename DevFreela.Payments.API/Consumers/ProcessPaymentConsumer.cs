@@ -10,6 +10,7 @@ namespace DevFreela.Payments.API.Consumers
     public class ProcessPaymentConsumer : BackgroundService
     {
         private const string QUEUE = "Payments";
+        private const string PAYMENT_APPROVED_QUEUE = "PaymentsApproved";
         private readonly IConnection _connection;
         private readonly IModel _channel;
         private readonly IServiceProvider _serviceProvider;
@@ -35,12 +36,19 @@ namespace DevFreela.Payments.API.Consumers
                 exclusive: false,
                 autoDelete: false,
                 arguments: null);
+
+            _channel.QueueDeclare(
+                queue: PAYMENT_APPROVED_QUEUE,
+                durable: false,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
         }
 
         //metodo que processa a mensagem da fila declarada acima...
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //instanciar uma classe eventingBasic e receber um canal
+            //instancia uma classe eventingBasic e recebe um canal
             var consumer = new EventingBasicConsumer(_channel);
 
             consumer.Received += (sender, eventArgs) =>
@@ -53,6 +61,18 @@ namespace DevFreela.Payments.API.Consumers
                 //processa pagamento
                 ProcessPayment(paymentInfo);
 
+
+                //cria o json a partir do integrationEvent
+                var paymentApproved = new PaymentApprovedIntegrationEvent(paymentInfo.IdProject);
+                var paymentApprovedJson = JsonSerializer.Serialize(paymentApproved);
+                var paymentApprovedBytes = Encoding.UTF8.GetBytes(paymentApprovedJson);
+
+                _channel.BasicPublish(
+                    exchange: "",
+                    routingKey: PAYMENT_APPROVED_QUEUE,
+                    basicProperties: null,
+                    body: paymentApprovedBytes);
+
                 //Diz para o broker que a msg foi recebida
                 _channel.BasicAck(eventArgs.DeliveryTag, false);
             };
@@ -61,7 +81,6 @@ namespace DevFreela.Payments.API.Consumers
             
             return Task.CompletedTask;
         }
-
         public void ProcessPayment(PaymentInfoInputModel paymentInfo)
         {
             //cria um escopo para criar instancias que duram nesse escopo

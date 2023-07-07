@@ -32,3 +32,5 @@ D:\Método.NETDireto\DevFreela.Payments\DevFreela.Payments.API\obj\Debug\net6.0\
 D:\Método.NETDireto\DevFreela.Payments\DevFreela.Payments.API\obj\Debug\net6.0\DevFreela.Payments.API.pdb
 D:\Método.NETDireto\DevFreela.Payments\DevFreela.Payments.API\obj\Debug\net6.0\DevFreela.Payments.API.genruntimeconfig.cache
 D:\Método.NETDireto\DevFreela.Payments\DevFreela.Payments.API\obj\Debug\net6.0\ref\DevFreela.Payments.API.dll
+D:\Método.NETDireto\DevFreela.Payments\DevFreela.Payments.API\bin\Debug\net6.0\RabbitMQ.Client.dll
+D:\Método.NETDireto\DevFreela.Payments\DevFreela.Payments.API\bin\Debug\net6.0\System.Threading.Channels.dll
